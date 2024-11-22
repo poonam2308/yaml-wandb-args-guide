@@ -9,9 +9,9 @@ import numpy as np
 
 
 class Trainer:
-    def __init__(self, config):
+    def __init__(self, config, use_wandb=False):
         self.config = config
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = SimpleNet(
             config['model']['input_dim'],
             config['model']['hidden_dim'],
@@ -19,7 +19,12 @@ class Trainer:
         ).to(self.device)
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=config['experiment']['learning_rate'])
-        wandb.init(project="simple-dl-project", name=config['experiment']['name'], config=config)
+
+        self.use_wandb = use_wandb
+        if self.use_wandb:
+            wandb.init(project="simple-dl-project", name=config['experiment']['name'], config=config)
+        else:
+            print("WandB logging is disabled. Logs will be saved locally.")
 
     def get_dummy_data(self):
         # Create dummy data
@@ -45,9 +50,11 @@ class Trainer:
                 loss.backward()
                 self.optimizer.step()
 
-            # Log metrics to WandB
-            wandb.log({"epoch": epoch + 1, "loss": loss.item()})
+            # Log metrics
+            if self.use_wandb:
+                wandb.log({"epoch": epoch + 1, "loss": loss.item()})
             print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss.item()}")
 
         print("Training Completed.")
-        wandb.finish()
+        if self.use_wandb:
+            wandb.finish()
