@@ -29,5 +29,5 @@ def setup_argparse():
     parser = argparse.ArgumentParser(description="A project to for yaml, args and wandb integration")
     parser.add_argument("--config", type=str, required=False, help="Path to the YAML configuration file.")
     parser.add_argument("--use_wandb", type=bool, default=False, help="Enable WandB logging if True.")
-    parser.add_argument("--sweep_config", type=str, required=True, help="Path to the sweep YAML configuration file.")
+    #parser.add_argument("--sweep_config", type=str, required=True, help="Path to the sweep YAML configuration file.")
     return parser.parse_args()
