@@ -45,5 +45,5 @@ else
     USE_WANDB=true
 fi
 
-python main.py --config config.yaml --use_wandb $USE_WANDB
+python yaml-wandb-args-guide/main.py --config config.yaml --use_wandb $USE_WANDB
 
